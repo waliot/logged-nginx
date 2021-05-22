@@ -1,1 +1,1 @@
-# logged-nginx
+# Logged NGINX
