@@ -3,15 +3,19 @@ set -e
 
 export PATH="$PATH:/usr/sbin"
 
-DATE=$(date +%Y-%m-%d-%H:%M:%S)
+START=$(date +%Y-%m-%d-%H:%M:%S)
+echo "Running a job at $START"
 
-mv /var/log/nginx/access.log /var/log/nginx/archive/nginx_access_$DATE.log
-mv /var/log/nginx/error.log /var/log/nginx/archive/nginx_error_$DATE.log
+mv /var/log/nginx/access.log /var/log/nginx/archive/access_$START.log
+mv /var/log/nginx/error.log /var/log/nginx/archive/error_$START.log
 
 nginx -s reopen
 sleep 1
 
-gzip /var/log/nginx/archive/nginx_access_$DATE.log
-gzip /var/log/nginx/archive/nginx_error_$DATE.log
+gzip /var/log/nginx/archive/access_$START.log
+gzip /var/log/nginx/archive/error_$START.log
 
-find /var/log/nginx/archive/*.log.gz -type f -mtime +7 -delete
+find /var/log/nginx/archive/*.log.gz -mtime +7 -type f -delete
+
+END=$(date +%Y-%m-%d-%H:%M:%S)
+echo "Job is done at $END"
